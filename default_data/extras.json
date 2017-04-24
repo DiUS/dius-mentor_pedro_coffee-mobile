@@ -1,0 +1,119 @@
+[
+  {
+    "title":"Milk",
+    "default":"Full-Cream",
+    "type": {
+      "full":{
+        "title": "Full-Cream"
+      },
+      "sk":{
+        "title": "Skinny"
+      },
+      "soy":{
+        "title": "Soy",
+        "price": 0.5
+      },
+      "alm":{
+        "title": "Almond",
+        "price": 0.5
+      }
+    }
+  },
+  {
+    "title":"strength",
+    "default":"Regular",
+    "type": {
+      "vst":{
+      "title": "Very Strong"
+      },
+      "st":{
+        "title": "Strong"
+      },
+      "reg":{
+        "title": "Regular"
+      },
+      "wk":{
+        "title": "Weak"
+      },
+      "vwk":{
+        "title": "Very Weak"
+      }
+    }
+  },
+  {
+    "title":"sweetener",
+    "default":"No",
+    "type": {
+      "ws":{
+        "title": "White Sugar"
+      },
+      "eq":{
+        "title": "Sweetener/Equal"
+      },
+      "raw":{
+        "title": "Raw Sugar"
+      },
+      "bro":{
+        "title": "Brown Sugar"
+      },
+      "hon":{
+        "title": "Honey"
+      }
+    }
+  },
+  {
+    "title":"temperature",
+    "default":"Regular",
+    "type": {
+      "vhot":{
+        "title": "Very Hot"
+      },
+      "hot":{
+        "title": "Hot"
+      },
+      "reg":{
+        "title": "Regular"
+      },
+      "warm":{
+        "title": "Warm"
+      },
+      "iced":{
+        "title": "Iced",
+        "price": 0.5
+      }
+    }
+  },
+  {
+    "title":"flavour",
+    "default":"No",
+    "type": {
+      "van":{
+        "title": "Vanilla"
+      },
+      "car":{
+        "title": "Caramel"
+      },
+      "haz":{
+        "title": "Hazelnut"
+      }
+    }
+  },
+  {
+    "title":"froth",
+    "default":"Regular",
+    "type": {
+      "nfr":{
+        "title": "No Froth"
+      },
+      "reg":{
+        "title": "Regular"
+      },
+      "xfr":{
+        "title": "Extra Froth"
+      }
+    }
+  },
+  {
+    "title":"others"
+  }
+]
