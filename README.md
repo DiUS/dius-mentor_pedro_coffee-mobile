@@ -11,7 +11,7 @@ Follow the [instructions](https://github.com/DiUS/dius-mentor_boris_coffee-api/)
 
 **Modify Endpoint**
 
-Edit [ApiUtil.js](https://github.com/DiUS/dius-mentor_pedro_coffee-mobile/blob/master/util/ApiUtil.js) to point to your API endpoint in order to make the correct calls
+Edit ENDPOINT in [Api.js](https://github.com/DiUS/dius-mentor_pedro_coffee-mobile/blob/master/Api.js) to point to your API endpoint in order to make the correct calls
 
 **Install dependencies & run**
 

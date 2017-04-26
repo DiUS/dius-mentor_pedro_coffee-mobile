@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import { View, ListView, Button, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import OptionsListView from '../components/OptionsListView';
 import Options from '../components/Options';
-import ApiUtil from '../util/ApiUtil';
+import Api from '../Api';
 
 class Orders extends Component{
   constructor(props){
@@ -68,72 +68,44 @@ class Orders extends Component{
     );
   }
 
-
-  /*
-  * API CALLS
-  * TODO: PATH SHOULD CHANGE DEPENDING ON DRINK (IF THERE ARE DIFF DRINKS)
-  */
+  //API CALLS
   createOrder(){
-    return fetch(ApiUtil.ENDPOINT+ApiUtil.ORDER_PATH,{
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'}
-    })
-    .then(ApiUtil.checkStatus)
-    .then((response) => response.json())
+    Api.createOrder()
     .then((responseJson) => {
       this.props.onSelect(responseJson);
-    })
-    .catch((error) => {
-      console.error(error);
     })
   }
 
   deleteOrder(order){
-    return fetch(ApiUtil.ENDPOINT+ApiUtil.ORDER_PATH+order.id,{
-      method: 'DELETE',
-      headers: {'Content-Type': 'application/json'}
-    })
-    .then(ApiUtil.checkStatus)
-    .then((response) => response.json())
+    Api.deleteOrder(order)
     .then((responseJson) => {
       var newOrders = this._orders.filter((item) =>{
         if(item.id !== order.id) return item;
       })
       this.updateState(newOrders);
     })
-    .catch((error) => {
-      console.error(error);
-    })
   }
 
   fetchData(){
-    fetch(ApiUtil.ENDPOINT+ApiUtil.ORDER_PATH)
-    .then(ApiUtil.checkStatus)
-    .then((response) => response.json())
+    Api.listOrders()
     .then((responseJson) => {
       var orders = responseJson.orders;
       var orderList = [];
       if(orders.length===0){
         this.updateState(orderList);
       }
-      for(var i=0;i<orders.length;i++){
-        fetch(ApiUtil.ENDPOINT+ApiUtil.ORDER_PATH+orders[i].id)
-        .then(ApiUtil.checkStatus)
-        .then((response) => response.json())
-        .then((responseJson) => {
-          orderList = [...orderList,responseJson];
-          if(orderList.length===orders.length){
-            //TODO FIX THIS TO DO IT IN A CORRECT WAY... ASYNC? PROMISE?
-            this.updateState(orderList);
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        })
+      else {
+        for(var i=0;i<orders.length;i++){
+          Api.getOrder(orders[i])
+          .then((responseJson) => {
+            orderList = [...orderList,responseJson];
+            if(orderList.length===orders.length){
+              //TODO FIX THIS TO DO IT IN A CORRECT WAY... ASYNC? PROMISE?
+              this.updateState(orderList);
+            }
+          })
+        }
       }
-    })
-    .catch((error) => {
-      console.error(error);
     })
   }
 

@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import { View, ListView, Button, Text, TextInput, StyleSheet, ActivityIndicator } from 'react-native';
 import OptionsListView from '../components/OptionsListView';
 import Options from '../components/Options';
-import ApiUtil from '../util/ApiUtil';
+import Api from '../Api';
 
 class Order extends Component{
   constructor(props){
@@ -112,49 +112,23 @@ class Order extends Component{
     );
   }
 
-
-  /*
-  * API CALLS
-  * TODO: PATH SHOULD CHANGE DEPENDING ON DRINK (IF THERE ARE DIFF DRINKS)
-  */
+  //API CALLS
   deleteOrder(){
-    return fetch(ApiUtil.ENDPOINT+ApiUtil.ORDER_PATH+this.state.order.id,{
-      method: 'DELETE',
-      headers: {'Content-Type': 'application/json'}
-    })
-    .then(ApiUtil.checkStatus)
-    .then((response) => response.json())
+    Api.deleteOrder(this.state.order)
     .then((responseJson) => {
       this.props.onComplete();
-    })
-    .catch((error) => {
-      console.error(error);
     })
   }
 
   updateOrder(){
-    return fetch(ApiUtil.ENDPOINT+this.state.order.id,{
-      method: 'PATCH',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({name : this.state.name})
-    })
-    .then(ApiUtil.checkStatus)
-    .then((response) => response.json())
+    Api.updateOrder(this.state.order,this.state.name)
     .then((responseJson) => {
       this.props.onComplete();
-    })
-    .catch((error) => {
-      console.error(error);
     })
   }
 
   deleteDrink(drink){
-    return fetch(ApiUtil.ENDPOINT+ApiUtil.ORDER_PATH+this.state.order.id+'/'+ApiUtil.COFFEE_PATH+drink.id,{
-      method: 'DELETE',
-      headers: {'Content-Type': 'application/json'}
-    })
-    .then(ApiUtil.checkStatus)
-    .then((response) => response.json())
+    Api.deleteDrink(order,drink)
     .then((responseJson) => {
       var newDrinks = this._drinks.filter((item) =>{
         if(item.id !== drink.id){
@@ -163,26 +137,19 @@ class Order extends Component{
       })
       this.updateState(newDrinks);
     })
-    .catch((error) => {
-      console.error(error);
-    })
   }
 
   fetchData(){
     var drinkList = [];
     for(var i=0;i<this.state.order.coffees.length;i++){
-      fetch(ApiUtil.ENDPOINT+ApiUtil.ORDER_PATH+this.state.order.id+'/'+ApiUtil.COFFEE_PATH+this.state.order.coffees[i].id)
-      .then(ApiUtil.checkStatus)
-      .then((response) => response.json())
+      var coffee = this.state.order.coffees[i];
+      Api.getDrink(this.state.order,coffee)
       .then((responseJson) => {
         drinkList = [...drinkList,responseJson];
         if(drinkList.length===this.state.order.coffees.length){
-          //TODO FIX THIS TO DO IT IN A CORRECT WAY... ASYNC? PROMISE?
+        //   //TODO FIX THIS TO DO IT IN A CORRECT WAY... ASYNC? PROMISE?
             this.updateState(drinkList);
         }
-      })
-      .catch((error) => {
-        console.error(error);
       })
     }
   }

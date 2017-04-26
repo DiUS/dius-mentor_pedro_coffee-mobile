@@ -6,7 +6,7 @@ import Options from '../components/Options';
 import hotDrinks from '../default_data/hotDrinks.json';
 import ExtrasListView from '../components/ExtrasListView';
 import OptionsListView from '../components/OptionsListView';
-import ApiUtil from '../util/ApiUtil';
+import Api from '../Api';
 
 //4 Steps detected in this view
 var STEP_INITIAL = 0;
@@ -193,16 +193,7 @@ class Drink extends Component {
   * TODO: PATH SHOULD CHANGE DEPENDING ON DRINK (IF THERE ARE DIFF DRINKS)
   */
   createDrink(){
-    return fetch(ApiUtil.ENDPOINT+ApiUtil.ORDER_PATH+this.state.order.id+'/'+ApiUtil.COFFEE_PATH,{
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        style : this.state.drink.style,
-        size : this.state.drink.size,
-      })
-    })
-    .then(ApiUtil.checkStatus)
-    .then((response) => response.json())
+    Api.createDrink(this.state.order,this.state.drink)
     .then((responseJson) => {
       var newDrinks = this.state.order.coffees;
       if(!newDrinks){
@@ -215,17 +206,10 @@ class Drink extends Component {
       newOrder.coffees = newDrinks;
       this.props.onComplete(newOrder);
     })
-    .catch((error) => {
-      //TODO Reset to Initial View
-      console.error(error);
-    })
   }
 
-  fetchDrinkOptions(selectedDrink){
-    //TODO Modify to work with different Drinks
-    return fetch(ApiUtil.ENDPOINT+ApiUtil.MENU_PATH+selectedDrink)
-    .then(ApiUtil.checkStatus)
-    .then((response) => response.json())
+  fetchDrinkOptions(drink){
+    Api.getDrinkOptions(drink)
     .then((responseJson) => {
       this.setState({
         drinkOptions:responseJson,
@@ -233,11 +217,7 @@ class Drink extends Component {
       });
       this.onStep(this.state.drink);
     })
-    .catch((error) => {
-      console.error(error);
-    })
   }
-
 }
 
 const styles = StyleSheet.create({

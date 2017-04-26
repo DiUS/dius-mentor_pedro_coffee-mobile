@@ -1,8 +1,4 @@
 var ApiUtil = {
-  ENDPOINT: 'http://a7234300.ngrok.io/',
-  ORDER_PATH : 'order/',
-  MENU_PATH : 'menu/',
-  COFFEE_PATH : 'coffee/',
   checkStatus: function(response) {
     if (response.status >= 200 && response.status < 300) {
       return response;
