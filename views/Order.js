@@ -118,7 +118,7 @@ class Order extends Component{
   * TODO: PATH SHOULD CHANGE DEPENDING ON DRINK (IF THERE ARE DIFF DRINKS)
   */
   deleteOrder(){
-    return fetch(ApiUtil.ENDPOINT+this.state.order.id,{
+    return fetch(ApiUtil.ENDPOINT+ApiUtil.ORDER_PATH+this.state.order.id,{
       method: 'DELETE',
       headers: {'Content-Type': 'application/json'}
     })
@@ -149,7 +149,7 @@ class Order extends Component{
   }
 
   deleteDrink(drink){
-    return fetch(ApiUtil.ENDPOINT+this.state.order.id+'/'+ApiUtil.COFFEE_PATH+drink.id,{
+    return fetch(ApiUtil.ENDPOINT+ApiUtil.ORDER_PATH+this.state.order.id+'/'+ApiUtil.COFFEE_PATH+drink.id,{
       method: 'DELETE',
       headers: {'Content-Type': 'application/json'}
     })
@@ -171,7 +171,7 @@ class Order extends Component{
   fetchData(){
     var drinkList = [];
     for(var i=0;i<this.state.order.coffees.length;i++){
-      fetch(ApiUtil.ENDPOINT+this.state.order.id+'/'+ApiUtil.COFFEE_PATH+this.state.order.coffees[i].id)
+      fetch(ApiUtil.ENDPOINT+ApiUtil.ORDER_PATH+this.state.order.id+'/'+ApiUtil.COFFEE_PATH+this.state.order.coffees[i].id)
       .then(ApiUtil.checkStatus)
       .then((response) => response.json())
       .then((responseJson) => {

@@ -1,7 +1,7 @@
 'use strict';
 
 import React, { Component } from 'react';
-import { View, ListView, Button, Text, StyleSheet } from 'react-native';
+import { View, ListView, Button, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import Options from '../components/Options';
 import hotDrinks from '../default_data/hotDrinks.json';
 import ExtrasListView from '../components/ExtrasListView';
@@ -19,99 +19,107 @@ var ds = new ListView.DataSource({rowHasChanged : (r1, r2) => r1 !== r2});
 class Drink extends Component {
   constructor(props) {
     super(props);
+    //API Don't allow Coffee Edition by now, so we use _isNew as flag
     this._isNew = this.props.drink?false:true;
     this.state = {
       order: this.props.order,
       //TODO: Modify when API accepts other drinks
       drink: {
-        type:null,
+        type:this._isNew?null:'Coffee', //Only coffee accepted right now
         style:this.props.drink?this.props.drink.style:null,
         size:this.props.drink?this.props.drink.size:null
       },
-      step: this.props.drink?STEP_EXTRAS:STEP_INITIAL,
-      //Visible Options
-      drinkOptions: {
-        styleOptions:null,
-        sizeOptions:null
-      },
-      //TODO FETCH DATA FROM API && SAME WITH EXTRAS LIST
+      isLoading:false,
+      step: this._isNew?STEP_INITIAL:STEP_EXTRAS,
+      drinkOptions:null,
+      //TODO FETCH DATA FROM API IN componentDidMount
       optionsList: ds.cloneWithRows(hotDrinks)
     };
+  }
+
+  componentDidMount(){
+    //FETCH MENU WHEN MORE DRINKS AVAILABLE --> NOW HOTDRINKS DEFAULT DATA
   }
 
   onBack(){
     this.props.onComplete(this.state.order);
   }
 
-  onSelectType(value){//Called on Initial Step. Initial Step is mandatory
+  onSelectType(type){//Called on Initial Step. Initial Step is mandatory
     var currentDrink = this.state.drink;
-    var currentDrinkOptions = this.state.drinkOptions;
-    currentDrink.type=value.title;
-    currentDrinkOptions.styleOptions=value.type;
-    currentDrinkOptions.sizeOptions=value.size;
-    var step=STEP_INITIAL;
-    if (value.type)       {step=STEP_STYLE;}
-    else if (value.size)  {step=STEP_SIZE;}
-    else                  {step=STEP_EXTRAS;}
-    this.setState({
-      drinkOptions: currentDrinkOptions
-    });
-    this.onStep(step,currentDrink);
+    currentDrink.type=type;
+    currentDrink.style=null;
+    currentDrink.size=null;
+    this.onStep(currentDrink);
   }
 
   onSelectStyle(style){
     var currentDrink = this.state.drink;
-    currentDrink.style = style.title;
-    var step=this.state.step;
-    if(this.state.drinkOptions.sizeOptions) {step=STEP_SIZE;}
-    else                                    {step=STEP_EXTRAS;}
-    this.onStep(step,currentDrink);
+    currentDrink.style = style;
+    currentDrink.size=null;
+    this.onStep(currentDrink);
   }
 
   onSelectSize(size){
     var currentDrink = this.state.drink;
-    currentDrink.size = size.title;
-    this.onStep(STEP_EXTRAS,currentDrink);
+    currentDrink.size = size;
+    this.onStep(currentDrink);
   }
 
-  onStep(step,drink){
-    var currentDrink = drink?drink:this.state.drink;
-    var currentOptions = null;
-    switch (step) {
-      case STEP_INITIAL: //initial
-        currentDrink.type = null;
-        currentDrink.style = null;
-        currentDrink.size = null;
-        currentOptions=ds.cloneWithRows(hotDrinks);
-        break;
-      case STEP_STYLE: //choose style
-        currentDrink.style = null;
-        currentDrink.size = null;
-        currentOptions=ds.cloneWithRows(this.state.drinkOptions.styleOptions);
-        break;
-      case STEP_SIZE: //choose size
-        currentDrink.size = null;
-        currentOptions=ds.cloneWithRows(this.state.drinkOptions.sizeOptions);
-        break;
-      default:break;
+  onStep(drink){
+    if(!this.state.drinkOptions){
+      this.setState({
+        drink:drink,
+        isLoading:this.state.drinkOptions?false:true
+      });
+      //TODO: By now only coffee options
+      this.fetchDrinkOptions('coffee');
     }
-    this.setState({
-      drink : currentDrink,
-      optionsList : currentOptions,
-      step: step
-    });
+    else{
+      var currentOptions = null;
+      var step=STEP_INITIAL;
+      if(!drink.type) {
+        step=STEP_INITIAL;
+      }
+      else if (!drink.style && this.state.drinkOptions.style) {
+        step=STEP_STYLE;
+      }
+      else if (!drink.size && this.state.drinkOptions.size) {
+        step=STEP_SIZE;
+      }
+      else {
+        step=STEP_EXTRAS;
+      }
+      switch (step) {
+        case STEP_INITIAL: //initial
+          currentOptions=ds.cloneWithRows(hotDrinks);
+          break;
+        case STEP_STYLE: //choose style
+          currentOptions=ds.cloneWithRows(this.state.drinkOptions.style);
+          break;
+        case STEP_SIZE: //choose size
+          currentOptions=ds.cloneWithRows(this.state.drinkOptions.size);
+          break;
+        default:break;
+      }
+      this.setState({
+        drink: drink,
+        optionsList : currentOptions,
+        step: step
+      });
+    }
   }
 
   renderRowSelect(rowData){
     switch (this.state.step) {
       case STEP_INITIAL:
-        return (<Button title={rowData.title} onPress={()=>this.onSelectType(rowData)}/>);
+        return (<Button title={rowData} onPress={()=>this.onSelectType(rowData)}/>);
         break;
       case STEP_STYLE:
-        return (<Button title={rowData.title} onPress={()=>this.onSelectStyle(rowData)}/>);
+        return (<Button title={rowData} onPress={()=>this.onSelectStyle(rowData)}/>);
         break;
       case STEP_SIZE:
-        return (<Button title={rowData.title} onPress={()=>this.onSelectSize(rowData)}/>);
+        return (<Button title={rowData} onPress={()=>this.onSelectSize(rowData)}/>);
         break;
       default:break;
     }
@@ -125,21 +133,21 @@ class Drink extends Component {
             <View style={styles.margin}>
               <Button
                 title={this.state.drink.type}
-                onPress={()=>this.onStep(STEP_INITIAL)}
+                onPress={()=>this.onSelectType(null)}
                 color='#c8dcf4'/>
             </View>}
           {this.state.drink.style &&
             <View style={styles.margin}>
              <Button
                title={this.state.drink.style}
-               onPress={()=>this.onStep(STEP_STYLE)}
+               onPress={()=>this.onSelectStyle(null)}
                color='#c8dcf4'/>
             </View>}
           {this.state.drink.size &&
             <View style={styles.margin}>
               <Button
                 title={this.state.drink.size}
-                onPress={()=>this.onStep(STEP_SIZE)}
+                onPress={()=>this.onSelectSize(null)}
                 color='#c8dcf4'/>
             </View>}
         </View>
@@ -164,7 +172,8 @@ class Drink extends Component {
         <Text>Current Selection:</Text>
         {this.renderSelectedValues()}
         <Text>Choose your {this.state.step>STEP_SIZE?"extras":"drink options"}:</Text>
-        {this.renderOptions()}
+        {!this.state.isLoading && this.renderOptions()}
+        {this.state.isLoading && <ActivityIndicator style={styles.spinner} size="large"/>}
         <View style={{flexDirection:'row', justifyContent:'space-between'}}>
           <View style={{flex : 1, marginRight:4}}>
             <Button title='<' onPress={()=>this.onBack()} />
@@ -184,7 +193,7 @@ class Drink extends Component {
   * TODO: PATH SHOULD CHANGE DEPENDING ON DRINK (IF THERE ARE DIFF DRINKS)
   */
   createDrink(){
-    return fetch(ApiUtil.ENDPOINT+this.state.order.id+'/'+ApiUtil.COFFEE_PATH,{
+    return fetch(ApiUtil.ENDPOINT+ApiUtil.ORDER_PATH+this.state.order.id+'/'+ApiUtil.COFFEE_PATH,{
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
@@ -212,9 +221,33 @@ class Drink extends Component {
     })
   }
 
+  fetchDrinkOptions(selectedDrink){
+    //TODO Modify to work with different Drinks
+    return fetch(ApiUtil.ENDPOINT+ApiUtil.MENU_PATH+selectedDrink)
+    .then(ApiUtil.checkStatus)
+    .then((response) => response.json())
+    .then((responseJson) => {
+      this.setState({
+        drinkOptions:responseJson,
+        isLoading:false
+      });
+      this.onStep(this.state.drink);
+    })
+    .catch((error) => {
+      console.error(error);
+    })
+  }
+
 }
 
 const styles = StyleSheet.create({
+  spinner: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 80,
+    flex: 1,
+    padding: 8,
+  },
   containerSelected:{
     flex: 0.45,
     alignItems: 'flex-start',

@@ -74,7 +74,7 @@ class Orders extends Component{
   * TODO: PATH SHOULD CHANGE DEPENDING ON DRINK (IF THERE ARE DIFF DRINKS)
   */
   createOrder(){
-    return fetch(ApiUtil.ENDPOINT,{
+    return fetch(ApiUtil.ENDPOINT+ApiUtil.ORDER_PATH,{
       method: 'POST',
       headers: {'Content-Type': 'application/json'}
     })
@@ -89,7 +89,7 @@ class Orders extends Component{
   }
 
   deleteOrder(order){
-    return fetch(ApiUtil.ENDPOINT+order.id,{
+    return fetch(ApiUtil.ENDPOINT+ApiUtil.ORDER_PATH+order.id,{
       method: 'DELETE',
       headers: {'Content-Type': 'application/json'}
     })
@@ -107,7 +107,7 @@ class Orders extends Component{
   }
 
   fetchData(){
-    fetch(ApiUtil.ENDPOINT)
+    fetch(ApiUtil.ENDPOINT+ApiUtil.ORDER_PATH)
     .then(ApiUtil.checkStatus)
     .then((response) => response.json())
     .then((responseJson) => {
@@ -117,7 +117,7 @@ class Orders extends Component{
         this.updateState(orderList);
       }
       for(var i=0;i<orders.length;i++){
-        fetch(ApiUtil.ENDPOINT+orders[i].id)
+        fetch(ApiUtil.ENDPOINT+ApiUtil.ORDER_PATH+orders[i].id)
         .then(ApiUtil.checkStatus)
         .then((response) => response.json())
         .then((responseJson) => {
