@@ -1,5 +1,5 @@
-var ApiUtils = {
-  ENDPOINT: 'http://b150ab3e.ngrok.io/order/',
+var ApiUtil = {
+  ENDPOINT: 'http://a7234300.ngrok.io/order/',
   COFFEE_PATH : 'coffee/',
   checkStatus: function(response) {
     if (response.status >= 200 && response.status < 300) {
@@ -12,4 +12,4 @@ var ApiUtils = {
   }
 };
 
-export default ApiUtils;
+export default ApiUtil;

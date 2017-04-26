@@ -2,8 +2,9 @@
 
 import React, { Component } from 'react';
 import { View, ListView, Button, StyleSheet } from 'react-native';
-import extras from './default_data/extras.json';
+import extras from '../default_data/extras.json';
 // import PopupDialog from 'react-native-popup-dialog';
+//TODO: ADD Dialogs for extras selection && filter extras depending on menu
 
 class ExtrasListView extends Component {
   constructor(props) {
@@ -40,11 +41,6 @@ class ExtrasListView extends Component {
             <View key={rowId} style={styles.separator}/>
           }
         />
-        {/* <PopupDialog ref={(popupDialog) => { this.popupDialog = popupDialog; }}>
-          <View>
-            <Text>Hello</Text>
-          </View>
-        </PopupDialog> */}
       </View>
     );
   }

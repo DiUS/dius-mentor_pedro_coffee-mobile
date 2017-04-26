@@ -2,11 +2,11 @@
 
 import React, { Component } from 'react';
 import { View, ListView, Button, Text, StyleSheet } from 'react-native';
-import ProceedButton from './ProceedButton';
-import hotDrinks from './default_data/hotDrinks.json';
-import ExtrasListView from './ExtrasListView';
-import OptionsListView from './OptionsListView';
-import ApiUtils from './ApiUtils';
+import Options from '../components/Options';
+import hotDrinks from '../default_data/hotDrinks.json';
+import ExtrasListView from '../components/ExtrasListView';
+import OptionsListView from '../components/OptionsListView';
+import ApiUtil from '../util/ApiUtil';
 
 //4 Steps detected in this view
 var STEP_INITIAL = 0;
@@ -22,6 +22,7 @@ class Drink extends Component {
     this._isNew = this.props.drink?false:true;
     this.state = {
       order: this.props.order,
+      //TODO: Modify when API accepts other drinks
       drink: {
         type:null,
         style:this.props.drink?this.props.drink.style:null,
@@ -40,38 +41,6 @@ class Drink extends Component {
 
   onBack(){
     this.props.onComplete(this.state.order);
-  }
-
-  onAddDrink(){
-    //TODO PATH WILL CHANGE DEPENDING ON DRINK (IF THERE ARE DIFF DRINKS)
-    return fetch(ApiUtils.ENDPOINT+this.state.order.id+'/'+ApiUtils.COFFEE_PATH,{
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        style : this.state.drink.style,
-        size : this.state.drink.size,
-      })
-    })
-    .then(ApiUtils.checkStatus)
-    .then((response) => response.json())
-    .then((responseJson) => {
-      var newDrinks = this.state.order.coffees;
-      if(!newDrinks){
-        newDrinks = [responseJson];
-      }
-      else{
-        newDrinks = [...newDrinks,responseJson];
-      }
-      var newOrder = this.state.order;
-      newOrder.coffees = newDrinks;
-      this.props.onComplete(newOrder);
-    })
-    .catch((error) => {
-      //TODO Reset to Initial View
-      console.error(error);
-    })
   }
 
   onSelectType(value){//Called on Initial Step. Initial Step is mandatory
@@ -133,7 +102,7 @@ class Drink extends Component {
     });
   }
 
-  _renderRowSelect(rowData){
+  renderRowSelect(rowData){
     switch (this.state.step) {
       case STEP_INITIAL:
         return (<Button title={rowData.title} onPress={()=>this.onSelectType(rowData)}/>);
@@ -148,41 +117,43 @@ class Drink extends Component {
     }
   }
 
-  _renderSelectedValues(){
+  renderSelectedValues(){
     return(
-      <View style={{
-        flex: 0.45,
-        alignItems: 'flex-start',
-        alignSelf:'stretch',
-      }}>
+      <View style={styles.containerSelected}>
         <View style={styles.container}>
           {this.state.drink.type &&
             <View style={styles.margin}>
-              <Button title={this.state.drink.type} onPress={()=>this.onStep(STEP_INITIAL)} color='#c8dcf4'/>
-            </View>
-          }
+              <Button
+                title={this.state.drink.type}
+                onPress={()=>this.onStep(STEP_INITIAL)}
+                color='#c8dcf4'/>
+            </View>}
           {this.state.drink.style &&
             <View style={styles.margin}>
-             <Button title={this.state.drink.style} onPress={()=>this.onStep(STEP_STYLE)} color='#c8dcf4'/>
-            </View>
-          }
+             <Button
+               title={this.state.drink.style}
+               onPress={()=>this.onStep(STEP_STYLE)}
+               color='#c8dcf4'/>
+            </View>}
           {this.state.drink.size &&
             <View style={styles.margin}>
-              <Button title={this.state.drink.size} onPress={()=>this.onStep(STEP_SIZE)} color='#c8dcf4'/>
-            </View>
-          }
+              <Button
+                title={this.state.drink.size}
+                onPress={()=>this.onStep(STEP_SIZE)}
+                color='#c8dcf4'/>
+            </View>}
         </View>
       </View>
     );
   }
 
-  _renderOptions(){
+  renderOptions(){
     if(this.state.step>2){
       return <ExtrasListView/>;
     }
     else{
       return <OptionsListView
-        renderRow={this._renderRowSelect.bind(this)}
+        renderRow={this.renderRowSelect.bind(this)}
         dataSource={this.state.optionsList}/>;
     }
   }
@@ -191,24 +162,64 @@ class Drink extends Component {
     return (
       <View style={{flex: 1, padding: 10}}>
         <Text>Current Selection:</Text>
-        {this._renderSelectedValues()}
-        <Text>Choose your {this.state.step>STEP_SIZE?"extras":"drink"}:</Text>
-        {this._renderOptions()}
+        {this.renderSelectedValues()}
+        <Text>Choose your {this.state.step>STEP_SIZE?"extras":"drink options"}:</Text>
+        {this.renderOptions()}
         <View style={{flexDirection:'row', justifyContent:'space-between'}}>
           <View style={{flex : 1, marginRight:4}}>
             <Button title='<' onPress={()=>this.onBack()} />
           </View>
           <View style={{flex : 8, marginLeft:4}}>
-            <ProceedButton title='Add Coffee' onPress={()=>this.onAddDrink()} disabled={!(this.state.step>STEP_SIZE) || !this._isNew}/>
+            <Options onSaveTitle='Add Drink' onSave={this.createDrink.bind(this)} onSaveDisabled={!(this.state.step>STEP_SIZE) || !this._isNew}/>
           </View>
         </View>
       </View>
     );
   }
 
+
+
+  /*
+  * API CALLS
+  * TODO: PATH SHOULD CHANGE DEPENDING ON DRINK (IF THERE ARE DIFF DRINKS)
+  */
+  createDrink(){
+    return fetch(ApiUtil.ENDPOINT+this.state.order.id+'/'+ApiUtil.COFFEE_PATH,{
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        style : this.state.drink.style,
+        size : this.state.drink.size,
+      })
+    })
+    .then(ApiUtil.checkStatus)
+    .then((response) => response.json())
+    .then((responseJson) => {
+      var newDrinks = this.state.order.coffees;
+      if(!newDrinks){
+        newDrinks = [responseJson];
+      }
+      else{
+        newDrinks = [...newDrinks,responseJson];
+      }
+      var newOrder = this.state.order;
+      newOrder.coffees = newDrinks;
+      this.props.onComplete(newOrder);
+    })
+    .catch((error) => {
+      //TODO Reset to Initial View
+      console.error(error);
+    })
+  }
+
 }
 
 const styles = StyleSheet.create({
+  containerSelected:{
+    flex: 0.45,
+    alignItems: 'flex-start',
+    alignSelf:'stretch',
+  },
   container:{
     flex:1,
     alignItems:'stretch',

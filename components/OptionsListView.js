@@ -1,8 +1,7 @@
 'use strict';
 
 import React, { Component } from 'react';
-import { View, ListView, Button, StyleSheet } from 'react-native';
-import extras from './default_data/extras.json';
+import { View, ListView, StyleSheet } from 'react-native';
 
 class OptionsListView extends Component {
   render(){

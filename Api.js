@@ -1,26 +1,31 @@
+'use strict';
+
+import React, { Component } from 'react';
 import ApiUtils from './ApiUtils';
 import { Alert } from 'react-native';
-var ENDPOINT = 'http://580e81ff.ngrok.io/order/';
+var ENDPOINT = 'http://19df5c7f.ngrok.io/order/';
 var COFFEE_PATH = 'coffee/';
 
-var Api = {
-  listOrders: function(){
+class Api extends Component {
+  listOrders(){
     return fetch(ENDPOINT)
       .then(ApiUtils.checkStatus)
       .then((response) => response.json())
       .catch((error) => {
         Alert.alert(error);
       })
-  },
-  getOrder: function(order){
+  }
+
+  getOrder(order){
     return fetch(ENDPOINT+order.id)
       .then(ApiUtils.checkStatus)
       .then((response) => response.json())
       .catch((error) => {
         Alert.alert(error);
       })
-  },
-  createOrder: function() {
+  }
+
+  createOrder() {
     return fetch(ENDPOINT,{
       method: 'POST',
       headers: {
@@ -37,8 +42,9 @@ var Api = {
       .catch((error) => {
         Alert.alert(error);
       })
-  },
-  updateOrder: function(orderId,drink){
+  }
+
+  updateOrder(orderId,drink){
     return fetch(ENDPOINT+orderId,{
       method: 'PUT',
       headers: {
@@ -55,24 +61,24 @@ var Api = {
       .catch((error) => {
         Alert.alert(error);
       })
-  },
-  cancelOrder: function(orderId){
+  }
+
+  cancelOrder(orderId, callback){
     return fetch(ENDPOINT+orderId,{
       method: 'DELETE',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      }
+      headers: {'Content-Type': 'application/json'}
     })
-      .then(ApiUtils.checkStatus)
-      .then((response) => {
-        return true;
-      })
-      .catch((error) => {
-        Alert.alert(error);
-      })
-  },
-  addCoffee: function(orderId,drink){
+    .then(ApiUtils.checkStatus)
+    .then((response) => response.json())
+    .then((responseJson) => {
+      callback();
+    })
+    .catch((error) => {
+      console.error(error);
+    })
+  }
+
+  addCoffee(orderId,drink){
     return fetch(ENDPOINT+orderId+'/'+COFFEE_PATH,{
       method: 'POST',
       headers: {
@@ -89,6 +95,7 @@ var Api = {
         Alert.alert(error);
       })
   }
+
 }
 
 export default Api;

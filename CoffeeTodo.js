@@ -1,11 +1,9 @@
 'use strict';
 
 import React, { Component } from 'react';
-import { View, ListView, Button, Text, Alert, StyleSheet } from 'react-native';
-import hotDrinks from './default_data/hotDrinks.json';
-import Drink from './Drink';
-import Orders from './Orders';
-import Order from './Order';
+import Drink from './views/Drink';
+import Orders from './views/Orders';
+import Order from './views/Order';
 
 //3 Steps detected in this view
 var VIEW_ORDERS = 0;
@@ -15,7 +13,6 @@ var VIEW_DRINK = 2;
 class CoffeeTodo extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       order: null,
       drink: null,
@@ -62,13 +59,5 @@ class CoffeeTodo extends Component {
   }
 
 }
-
-const styles = StyleSheet.create({
-  separator: {
-    flex: 1,
-    height: 7,
-    backgroundColor: '#FFFFFF',
-  },
-});
 
 export default CoffeeTodo;
