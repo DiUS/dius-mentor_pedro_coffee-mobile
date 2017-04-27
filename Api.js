@@ -1,7 +1,7 @@
 'use strict';
 import ApiUtil from './util/ApiUtil';
 
-var ENDPOINT = 'http://a7234300.ngrok.io/';
+var ENDPOINT = 'http://c73e1f26.ngrok.io/';
 var ORDER_PATH = 'order/';
 var MENU_PATH = 'menu/';
 var COFFEE_PATH = 'coffee/';
@@ -13,7 +13,7 @@ class Api{
     .then(ApiUtil.checkStatus)
     .then((response) => response.json())
     .catch((error) => {
-      console.eror(error);
+      console.error(error);
     })
   }
 
@@ -22,7 +22,7 @@ class Api{
     .then(ApiUtil.checkStatus)
     .then((response) => response.json())
     .catch((error) => {
-      console.eror(error);
+      console.error(error);
     })
   }
 
@@ -34,7 +34,7 @@ class Api{
     .then(ApiUtil.checkStatus)
     .then((response) => response.json())
     .catch((error) => {
-      console.eror(error);
+      console.error(error);
     })
   }
 
@@ -59,11 +59,12 @@ class Api{
     .then(ApiUtil.checkStatus)
     .then((response) => response.json())
     .catch((error) => {
-      console.eror(error);
+      console.error(error);
     })
   }
 
   static getDrink(order,drink){
+    //TODO Modify COFFEE_PATH for drink.type when enabled.
     return fetch(ENDPOINT+ORDER_PATH+order.id+'/'+COFFEE_PATH+drink.id)
     .then(ApiUtil.checkStatus)
     .then((response) => response.json())
@@ -73,6 +74,7 @@ class Api{
   }
 
   static createDrink(order,drink){
+    //TODO Modify COFFEE_PATH for drink.type when enabled.
     return fetch(ENDPOINT+ORDER_PATH+order.id+'/'+COFFEE_PATH,{
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
@@ -89,6 +91,7 @@ class Api{
   }
 
   static deleteDrink(order,drink){
+    //TODO Modify COFFEE_PATH for drink.type when enabled.
     return fetch(ENDPOINT+ORDER_PATH+order.id+'/'+COFFEE_PATH+drink.id,{
       method: 'DELETE',
       headers: {'Content-Type': 'application/json'}
@@ -96,7 +99,7 @@ class Api{
     .then(ApiUtil.checkStatus)
     .then((response) => response.json())
     .catch((error) => {
-      console.eror(error);
+      console.error(error);
     })
   }
 

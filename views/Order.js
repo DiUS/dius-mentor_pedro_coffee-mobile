@@ -128,7 +128,7 @@ class Order extends Component{
   }
 
   deleteDrink(drink){
-    Api.deleteDrink(order,drink)
+    Api.deleteDrink(this.state.order,drink)
     .then((responseJson) => {
       var newDrinks = this._drinks.filter((item) =>{
         if(item.id !== drink.id){
