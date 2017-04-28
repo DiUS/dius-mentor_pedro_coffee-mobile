@@ -26,8 +26,8 @@ class Drink extends Component {
       //TODO: Modify when API accepts other drinks
       drink: {
         type:this._isNew?null:'Coffee', //Only coffee accepted right now
-        style:this.props.drink?this.props.drink.style:null,
-        size:this.props.drink?this.props.drink.size:null
+        style:this._isNew?null:this.props.drink.style,
+        size:this._isNew?null:this.props.drink.size
       },
       isLoading:false,
       step: this._isNew?STEP_INITIAL:STEP_EXTRAS,
