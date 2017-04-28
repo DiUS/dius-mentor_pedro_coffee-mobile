@@ -1,7 +1,7 @@
 'use strict';
 import ApiUtil from './util/ApiUtil';
 
-var ENDPOINT = 'http://c73e1f26.ngrok.io/';
+var ENDPOINT = 'http://b7f02e06.ngrok.io/';
 var ORDER_PATH = 'order/';
 var MENU_PATH = 'menu/';
 var COFFEE_PATH = 'coffee/';

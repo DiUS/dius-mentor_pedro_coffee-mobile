@@ -87,6 +87,7 @@ class Orders extends Component{
   }
 
   fetchData(){
+    console.log("entra");
     Api.listOrders()
     .then((responseJson) => {
       var orders = responseJson.orders;
