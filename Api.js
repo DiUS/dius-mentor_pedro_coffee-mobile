@@ -6,6 +6,12 @@ var ORDER_PATH = 'order/';
 var MENU_PATH = 'menu/';
 var COFFEE_PATH = 'coffee/';
 
+
+/**
+All different calls to API are made from this class using an ApiUtil to handle
+errors and check network status
+**/
+//TODO: Handling errors in a silent way for the user experience
 class Api{
 
   static listOrders(){

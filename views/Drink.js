@@ -8,11 +8,11 @@ import ExtrasListView from '../components/ExtrasListView';
 import OptionsListView from '../components/OptionsListView';
 import Api from '../Api';
 
-//4 Steps detected in this view
+//4 Steps (States) detected in this view
 var STEP_INITIAL = 0;
 var STEP_STYLE = 1;
 var STEP_SIZE = 2;
-var STEP_EXTRAS = 3;
+var STEP_EXTRAS = 3; //This is actually a ghost STEP as is not currently enabled
 
 var ds = new ListView.DataSource({rowHasChanged : (r1, r2) => r1 !== r2});
 
@@ -133,21 +133,21 @@ class Drink extends Component {
             <View style={styles.margin}>
               <Button
                 title={this.state.drink.type}
-                onPress={()=>this.onSelectType(null)}
+                onPress={()=>this.onSelectType()}
                 color='#c8dcf4'/>
             </View>}
           {this.state.drink.style &&
             <View style={styles.margin}>
              <Button
                title={this.state.drink.style}
-               onPress={()=>this.onSelectStyle(null)}
+               onPress={()=>this.onSelectStyle()}
                color='#c8dcf4'/>
             </View>}
           {this.state.drink.size &&
             <View style={styles.margin}>
               <Button
                 title={this.state.drink.size}
-                onPress={()=>this.onSelectSize(null)}
+                onPress={()=>this.onSelectSize()}
                 color='#c8dcf4'/>
             </View>}
         </View>

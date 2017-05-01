@@ -5,11 +5,14 @@ import Drink from './views/Drink';
 import Orders from './views/Orders';
 import Order from './views/Order';
 
-//3 Steps detected in this view
+//3 views detected in this application
 var VIEW_ORDERS = 0;
 var VIEW_ORDER = 1;
 var VIEW_DRINK = 2;
 
+/**
+This class works as controller between the different views
+**/
 class CoffeeTodo extends Component {
   constructor(props) {
     super(props);
