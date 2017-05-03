@@ -11,7 +11,7 @@ Follow the [instructions](https://github.com/DiUS/dius-mentor_boris_coffee-api/)
 
 **Modify Endpoint**
 
-Edit ENDPOINT in [Api.js](https://github.com/DiUS/dius-mentor_pedro_coffee-mobile/blob/master/Api.js) to point to your API endpoint in order to make the correct calls
+Edit baseURL in [config.js](https://github.com/DiUS/dius-mentor_pedro_coffee-mobile/blob/master/config.js) to point to your API endpoint in order to make the correct calls
 
 **Install dependencies & run**
 
@@ -30,7 +30,7 @@ Tests are located on *__tests__* folder.
 
 To run tests:
 ```
-> npm test
+> npm test -- --coverage
 ```
 
 **Cross-platform development**
