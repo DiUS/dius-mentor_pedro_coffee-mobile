@@ -4,7 +4,10 @@ import React, { Component } from 'react';
 import { View, ListView, Button, Text, TextInput, StyleSheet, ActivityIndicator } from 'react-native';
 import OptionsListView from '../components/OptionsListView';
 import Options from '../components/Options';
-import Api from '../Api';
+import { baseUrl } from '../config.js'
+import Client from '../client/Client';
+
+const client = Client(baseUrl);
 
 class Order extends Component{
   constructor(props){
@@ -114,21 +117,21 @@ class Order extends Component{
 
   //API CALLS
   deleteOrder(){
-    Api.deleteOrder(this.state.order)
+    client.deleteOrder(this.state.order.id)
     .then((responseJson) => {
       this.props.onComplete();
     })
   }
 
   updateOrder(){
-    Api.updateOrder(this.state.order,this.state.name)
+    client.updateOrder(this.state.order.id,this.state.name)
     .then((responseJson) => {
       this.props.onComplete();
     })
   }
 
   deleteDrink(drink){
-    Api.deleteDrink(this.state.order,drink)
+    client.deleteDrink(this.state.order.id,drink)
     .then((responseJson) => {
       var newDrinks = this._drinks.filter((item) =>{
         if(item.id !== drink.id){
@@ -143,7 +146,7 @@ class Order extends Component{
     var drinkList = [];
     for(var i=0;i<this.state.order.coffees.length;i++){
       var coffee = this.state.order.coffees[i];
-      Api.getDrink(this.state.order,coffee)
+      client.getDrink(this.state.order.id,coffee)
       .then((responseJson) => {
         drinkList = [...drinkList,responseJson];
         if(drinkList.length===this.state.order.coffees.length){

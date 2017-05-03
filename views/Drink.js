@@ -6,7 +6,10 @@ import Options from '../components/Options';
 import hotDrinks from '../default_data/hotDrinks.json';
 import ExtrasListView from '../components/ExtrasListView';
 import OptionsListView from '../components/OptionsListView';
-import Api from '../Api';
+import { baseUrl } from '../config.js'
+import Client from '../client/Client';
+
+const client = Client(baseUrl);
 
 //4 Steps (States) detected in this view
 var STEP_INITIAL = 0;
@@ -193,7 +196,7 @@ class Drink extends Component {
   * TODO: PATH SHOULD CHANGE DEPENDING ON DRINK (IF THERE ARE DIFF DRINKS)
   */
   createDrink(){
-    Api.createDrink(this.state.order,this.state.drink)
+    client.createDrink(this.state.order.id,this.state.drink)
     .then((responseJson) => {
       var newDrinks = this.state.order.coffees;
       if(!newDrinks){
@@ -209,7 +212,7 @@ class Drink extends Component {
   }
 
   fetchDrinkOptions(drink){
-    Api.getDrinkOptions(drink)
+    client.getDrinkMenu(drink)
     .then((responseJson) => {
       this.setState({
         drinkOptions:responseJson,

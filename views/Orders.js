@@ -1,11 +1,13 @@
 'use strict';
 
 import React, { Component } from 'react';
-import { View, ListView, Button, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, ListView, Button, Text, StyleSheet, ActivityIndicator} from 'react-native';
 import OptionsListView from '../components/OptionsListView';
 import Options from '../components/Options';
-import Api from '../Api';
+import { baseUrl } from '../config.js'
+import Client from '../client/Client';
 
+const client = Client(baseUrl);
 class Orders extends Component{
   constructor(props){
     super(props);
@@ -70,14 +72,14 @@ class Orders extends Component{
 
   //API CALLS
   createOrder(){
-    Api.createOrder()
+    client.createOrder()
     .then((responseJson) => {
       this.props.onSelect(responseJson);
     })
   }
 
   deleteOrder(order){
-    Api.deleteOrder(order)
+    client.deleteOrder(order.id)
     .then((responseJson) => {
       var newOrders = this._orders.filter((item) =>{
         if(item.id !== order.id) return item;
@@ -87,7 +89,7 @@ class Orders extends Component{
   }
 
   fetchData(){
-    Api.listOrders()
+    client.listOrders()
     .then((responseJson) => {
       var orders = responseJson.orders;
       var orderList = [];
@@ -96,7 +98,7 @@ class Orders extends Component{
       }
       else {
         for(var i=0;i<orders.length;i++){
-          Api.getOrder(orders[i])
+          client.getOrder(orders[i].id)
           .then((responseJson) => {
             orderList = [...orderList,responseJson];
             if(orderList.length===orders.length){

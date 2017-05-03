@@ -1,8 +1,15 @@
 # dependencies
 node_modules
+jest
+
+#dev
+pacts
 
 # production
+__tests__/snapshots
 build
+coverage
+logs
 
 # OSX
 #
