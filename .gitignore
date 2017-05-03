@@ -6,7 +6,7 @@ jest
 pacts
 
 # production
-__tests__/snapshots
+__tests__/__snapshots__
 build
 coverage
 logs

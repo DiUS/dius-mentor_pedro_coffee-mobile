@@ -16,11 +16,12 @@ describe('Coffee service (orders)', () => {
   const client = Client(`${endpoint}:${port}`)
 
   let provider = pact({
-    consumer: 'Coffee Web Consumer',
+    consumer: 'Coffee Mobile Consumer',
     provider: 'Coffee Ordering Provider',
     port: port,
     log: path.resolve(process.cwd(), 'logs', 'mockserver-integration.log'),
     dir: path.resolve(process.cwd(), 'pacts'),
+    spec: 2,
     done: (error) => {
       expect(error).to.be.null
     }
