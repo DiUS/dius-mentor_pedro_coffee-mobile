@@ -4,10 +4,9 @@ import React, { Component } from 'react';
 import { View, ListView, Button, Text, StyleSheet, ActivityIndicator} from 'react-native';
 import OptionsListView from '../components/OptionsListView';
 import Options from '../components/Options';
-import { baseUrl } from '../config.js'
 import Client from '../client/Client';
 
-const client = Client(baseUrl);
+const client = Client();
 class Orders extends Component{
   constructor(props){
     super(props);
