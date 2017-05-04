@@ -116,8 +116,8 @@ describe('Coffee service (orders)', () => {
             status: 201,
             headers: responseHeaders,
             body: {
-              id:1,
-              path:'/order/1'
+              id:like(1),
+              path:like('/order/1')
             }
           }
         })
@@ -125,8 +125,7 @@ describe('Coffee service (orders)', () => {
 
       it('', () => client.createOrder()
         .then((body) => {
-          expect(body.id).to.eql(1)
-          expect(body.path).to.eql('/order/1')
+          expect(body.path).to.eql('/order/'+body.id)
         })
         .catch(fail)
       )
@@ -369,13 +368,11 @@ describe('Coffee service (orders)', () => {
             body: drink
           },
           willRespondWith: {
-            status: 200,
+            status: 201,
             headers: responseHeaders,
             body: {
-              id: 37,
-              style: drink.style,
-              size: drink.size,
-              path: '/order/19/coffee/37'
+              id: 0,
+              path: '/order/19/coffee/0'
             }
           }
         })
@@ -383,9 +380,7 @@ describe('Coffee service (orders)', () => {
 
       it('', () => client.createDrink(19,drink)
         .then((body) => {
-          expect(body.id).to.eql(37)
-          expect(body.style).to.eql(drink.style)
-          expect(body.path).to.eql('/order/19/coffee/37')
+          expect(body.path).to.eql('/order/19/coffee/'+body.id)
         })
         .catch(fail)
       )
@@ -498,8 +493,6 @@ describe('Coffee service (orders)', () => {
             headers: responseHeaders,
             body: {
               id: modifiedDrink.id,
-              style: modifiedDrink.style,
-              size: modifiedDrink.size,
               path: '/order/43/'+modifiedDrink.type+'/'+modifiedDrink.id
             }
           }
@@ -509,8 +502,6 @@ describe('Coffee service (orders)', () => {
       it('', () => client.updateDrink(43,modifiedDrink)
         .then((body) => {
           expect(body.id).to.eql(modifiedDrink.id)
-          expect(body.style).to.eql(modifiedDrink.style)
-          expect(body.size).to.eql(modifiedDrink.size)
           expect(body.path).to.eql('/order/43/'+modifiedDrink.type+'/'+modifiedDrink.id)
         })
         .catch(fail)
