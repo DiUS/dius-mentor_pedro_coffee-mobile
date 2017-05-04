@@ -1,12 +1,13 @@
 const pact = require('@pact-foundation/pact-node')
 const path = require('path')
+const pjson = require('./package.json')
 const opts = {
   pactUrls: [path.resolve(__dirname, '../pacts/coffee_mobile_consumer-coffee_ordering_provider.json')],
   pactBroker: 'https://'+process.env.pactBrokerAccount+'.pact.dius.com.au',
   pactBrokerUsername: process.env.pactBrokerUsername,
   pactBrokerPassword: process.env.pactBrokerPassword,
   tags: ['prod', 'test'],
-  consumerVersion: '1.0.0'
+  consumerVersion: pjson.version
 }
 
 pact.publishPacts(opts)
