@@ -27,18 +27,23 @@ Edit baseURL in [config.js](https://github.com/DiUS/dius-mentor_pedro_coffee-mob
 
 **JEST Testing**
 
-Tests are located on *__tests__* folder.
+Tests are located on *__tests__* folder, including a [Pact](https://github.com/pact-foundation/pact-js) consumer.
 
 To run tests:
 ```
 > npm test -- --coverage
 ```
 
+**Publishing your consumer**
+
+[Publish](https://github.com/DiUS/dius-mentor_pedro_coffee-mobile/blob/master/publish/publish.js) was added in order to share your pact consumer (check [Pact Broker](https://docs.pact.io/documentation/sharings_pacts.html)). Before run *publish.js*, set your environmental values for `pactBroker`, `pactBrokerUsername`, `pactBrokerPassword`.
+
+
 **Cross-platform development**
 
 There is no specific code for Android or iOS devices, 100% of the code is shared for both platfoms. 
 
-* **Api Calls (Model)**: Api.js using ApiUtil is in charge of all the communication between the app and API.
+* **Api Requests**: Client.js using ApiUtil is in charge of all the communication between the app and API.
 * **Controller**: CoffeeTodo.js works as controller between the 3 different views in the app.
 * **Views & Components**: under views/ and components/ folders are located all the React-Native specific classes. 
 
