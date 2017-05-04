@@ -6,4 +6,3 @@ docker run \
   -v `pwd`:$mnt_dir -w $mnt_dir \
   node:6 \
   bash -c "npm install && npm test -- --coverage"
-  bash -c "node publish/publish.js"
