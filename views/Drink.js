@@ -25,8 +25,9 @@ class Drink extends Component {
     this._initialDrink = this.props.drink;
     this.state = {
       order: this.props.order,
-      //TODO: Modify when API accepts other drinks
+      //TODO: Modify when API accepts other drinks for drink:this.props.drink
       drink: {
+        id:this.props.drink?this.props.drink.id:null,
         type:this.props.drink?'Coffee':null, //Only coffee accepted right now
         style:this.props.drink?this.props.drink.style:null,
         size:this.props.drink?this.props.drink.size:null
