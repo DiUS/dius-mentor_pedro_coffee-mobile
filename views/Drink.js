@@ -22,18 +22,17 @@ var ds = new ListView.DataSource({rowHasChanged : (r1, r2) => r1 !== r2});
 class Drink extends Component {
   constructor(props) {
     super(props);
-    //API Don't allow Coffee Edition by now, so we use _isNew as flag
-    this._isNew = this.props.drink?false:true;
+    this._initialDrink = this.props.drink;
     this.state = {
       order: this.props.order,
       //TODO: Modify when API accepts other drinks
       drink: {
-        type:this._isNew?null:'Coffee', //Only coffee accepted right now
-        style:this._isNew?null:this.props.drink.style,
-        size:this._isNew?null:this.props.drink.size
+        type:this.props.drink?'Coffee':null, //Only coffee accepted right now
+        style:this.props.drink?this.props.drink.style:null,
+        size:this.props.drink?this.props.drink.size:null
       },
       isLoading:false,
-      step: this._isNew?STEP_INITIAL:STEP_EXTRAS,
+      step: this.props.drink?STEP_EXTRAS:STEP_INITIAL,
       drinkOptions:null,
       //TODO FETCH DATA FROM API IN componentDidMount
       optionsList: ds.cloneWithRows(hotDrinks)
@@ -182,7 +181,14 @@ class Drink extends Component {
             <Button title='<' onPress={()=>this.onBack()} />
           </View>
           <View style={{flex : 8, marginLeft:4}}>
-            <Options onSaveTitle='Add Drink' onSave={this.createDrink.bind(this)} onSaveDisabled={!(this.state.step>STEP_SIZE) || !this._isNew}/>
+            {this._initialDrink &&
+              <Options onSaveTitle='Update Drink' onSave={this.updateDrink.bind(this)}
+                onSaveDisabled={!(this.state.step>STEP_SIZE) ||
+                  (this.state.drink.style===this._initialDrink.style &&
+                    this.state.drink.size===this._initialDrink.size)}/>}
+            {!this._initialDrink &&
+              <Options onSaveTitle='Add Drink' onSave={this.createDrink.bind(this)}
+                onSaveDisabled={!(this.state.step>STEP_SIZE)}/>}
           </View>
         </View>
       </View>
@@ -207,7 +213,14 @@ class Drink extends Component {
       }
       var newOrder = this.state.order;
       newOrder.coffees = newDrinks;
-      this.props.onComplete(newOrder);
+      this.props.onComplete(this.state.order);
+    })
+  }
+
+  updateDrink(){
+    client.updateDrink(this.state.order.id,this.state.drink)
+    .then((responseJson) => {
+      this.props.onComplete(this.state.order);
     })
   }
 

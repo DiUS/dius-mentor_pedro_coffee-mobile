@@ -28,13 +28,14 @@ const Client = (url = baseUrl) => ({
   updateOrder: (id, name) => patchRequest(`${url}/order/${id}`,
     JSON.stringify({name : name})),
   //Menu Requests
+  getMenu: () => getRequest(`${url}/menu`),
   getDrinkMenu: (type) => getRequest(`${url}/menu/${type}`),
   //Drink Requests
   getDrink: (id,drink) => getRequest(`${url}/order/${id}/coffee/${drink.id}`),
   createDrink: (id,drink) => postRequest(`${url}/order/${id}/coffee`,
     JSON.stringify({style : drink.style,size : drink.size,})),
   updateDrink: (id,drink) => patchRequest(`${url}/order/${id}/coffee/${drink.id}`,
-    JSON.stringify({style : drink.style,size : drink.size,})),
+    JSON.stringify({style : drink.style, size : drink.size,})),
   deleteDrink: (id,drink) => deleteRequest(`${url}/order/${id}/coffee/${drink.id}`)
 })
 
