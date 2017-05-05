@@ -1,4 +1,4 @@
-# Coffee Shop Ordering API
+# Coffee Shop Ordering Mobile-Web App
 [![Build status](https://badge.buildkite.com/6484318ee252264a9060c4bd0b59d30c2dfd2fd1d55986ae3e.svg)](https://buildkite.com/dius-3/mentoring-coffee-shop-mobile)
 [![Pact](https://img.shields.io/badge/Pact-up-brightgreen.svg)](https://coffee.pact.dius.com.au)
 
