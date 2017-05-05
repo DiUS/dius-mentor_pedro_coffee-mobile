@@ -24,7 +24,7 @@ set your environment variable for `coffeeApiBaseUrl` that will be used in [confi
   --choose your platform--
 Android > react-native run-android
 iOS     > react-native run-ios
-Web     > ./node_modules/.bin/webpack-dev-server --inline
+Web     > npm run-script web
 ```
 
 **JEST Testing**

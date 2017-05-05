@@ -6,7 +6,8 @@
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest",
     "flow": "node_modules/.bin/flow",
-    "pactPublish": "node publish/publish.js"
+    "pactPublish": "node publish/publish.js",
+    "web": "./node_modules/.bin/webpack-dev-server --inline"
   },
   "dependencies": {
     "babel-loader": "^7.0.0",
