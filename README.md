@@ -1,5 +1,6 @@
 # Coffee Shop Ordering API
 [![Build status](https://badge.buildkite.com/6484318ee252264a9060c4bd0b59d30c2dfd2fd1d55986ae3e.svg)](https://buildkite.com/dius-3/mentoring-coffee-shop-mobile)
+[![Pact](https://img.shields.io/badge/Pact-up-brightgreen.svg)](https://coffee.pact.dius.com.au)
 
 React-Native App to work with this particular [API](https://github.com/DiUS/dius-mentor_boris_coffee-api/)
 
@@ -12,7 +13,7 @@ Follow the [instructions](https://github.com/DiUS/dius-mentor_boris_coffee-api/)
 
 **Modify Endpoint**
 
-Edit baseURL in [config.js](https://github.com/DiUS/dius-mentor_pedro_coffee-mobile/blob/master/config.js) to point to your API endpoint in order to make the correct calls
+set your environment variable for `coffeeApiBaseUrl` that will be used in [config.js](https://github.com/DiUS/dius-mentor_pedro_coffee-mobile/blob/master/config.js) to point to your API endpoint
 
 **Install dependencies & run**
 
@@ -20,9 +21,10 @@ Edit baseURL in [config.js](https://github.com/DiUS/dius-mentor_pedro_coffee-mob
 > npm install
 > react-native start
 
-> react-native run-android
-	--or--
-> react-native run-ios
+  --choose your platform--
+Android > react-native run-android
+iOS     > react-native run-ios
+Web     > ./node_modules/.bin/webpack-dev-server --inline
 ```
 
 **JEST Testing**
@@ -36,7 +38,10 @@ To run tests:
 
 **Publishing your consumer**
 
-[Publish](https://github.com/DiUS/dius-mentor_pedro_coffee-mobile/blob/master/publish/publish.js) was added in order to share your pact consumer (check [Pact Broker](https://docs.pact.io/documentation/sharings_pacts.html)). Before run *publish.js*, set your environmental values for `pactBroker`, `pactBrokerUsername`, `pactBrokerPassword`.
+[Publish](https://github.com/DiUS/dius-mentor_pedro_coffee-mobile/blob/master/publish/publish.js) was added in order to share your pact consumer (check [Pact Broker](https://docs.pact.io/documentation/sharings_pacts.html)). Before run *publish.js*, run tests and set your environment variables for `pactBroker`, `pactBrokerUsername`, `pactBrokerPassword`.
+```
+> npm run-script pactPublish
+```
 
 
 **Cross-platform development**
