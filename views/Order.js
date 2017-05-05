@@ -4,9 +4,10 @@ import React, { Component } from 'react';
 import { View, ListView, Button, Text, TextInput, StyleSheet, ActivityIndicator } from 'react-native';
 import OptionsListView from '../components/OptionsListView';
 import Options from '../components/Options';
+import { baseUrl } from '../config.js'
 import Client from '../client/Client';
 
-const client = Client();
+const client = Client(baseUrl);
 
 class Order extends Component{
   constructor(props){

@@ -146,7 +146,7 @@ describe('Coffee service (orders)', () => {
             headers: responseHeaders,
             body: {
               id: 23,
-              coffees: eachLike({id:66},{min:2}),
+              coffees: eachLike({id:like(66)},{min:2}),
               name: 'Jimothy',
               path: '/order/23'
             }

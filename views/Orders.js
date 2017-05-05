@@ -1,50 +1,36 @@
 'use strict';
 
 import React, { Component } from 'react';
-import { View, ListView, Button, Text, StyleSheet, ActivityIndicator} from 'react-native';
+import { View, ListView, Button, Text, StyleSheet, ActivityIndicator, TouchableHighlight} from 'react-native';
 import OptionsListView from '../components/OptionsListView';
 import Options from '../components/Options';
-import Client from '../client/Client';
 
-const client = Client();
 class Orders extends Component{
   constructor(props){
     super(props);
-    this._orders = null;
-    this.state = {
-      orders : this._orders
-    }
-  }
-
-  updateState(orderList){
     var ds = new ListView.DataSource({rowHasChanged : (r1, r2) => r1 !== r2});
-    this._orders=orderList;
-    this.setState({
-      orders: ds.cloneWithRows(orderList)
-    });
-  }
-
-  onSelectOrder(order){
-    if(order){
-      this.props.onSelect(order);
+    this.state = {
+      orders : ds.cloneWithRows(this.props.orders)
     }
-    else{
-      this.createOrder();
-    }
-  }
-
-  componentDidMount(){
-    this.fetchData();
   }
 
   renderRowSelect(rowData){
+    var coffeeSummaries=[];
+    for(var i=0;i<rowData.coffeeSummaries.length;i++){
+      coffeeSummaries.push(<Text key={i}>{rowData.coffeeSummaries[i]}</Text>)
+    }
     return (
       <View style={{flexDirection: 'row', justifyContent:'space-between'}}>
         <View style={{flex : 5}}>
-          <Button title={rowData.name} onPress={()=>this.onSelectOrder(rowData)}/>
+          <TouchableHighlight onPress={()=>this.props.onSelect(rowData.id)}>
+            <View>
+              <Text style={styles.titleText}>{rowData.name}</Text>
+              {coffeeSummaries}
+            </View>
+          </TouchableHighlight>
         </View>
         <View style={{marginLeft: 4, flex : 1}}>
-          <Button title={'X'} onPress={()=>this.deleteOrder(rowData)} color='#ff6666'/>
+          <Button title={'X'} onPress={()=>this.props.onDelete(rowData.id)} color='#ff6666'/>
         </View>
       </View>
     );
@@ -60,54 +46,13 @@ class Orders extends Component{
         {this.state.orders &&
           <Options
             onSaveTitle='Add Order'
-            onSave={this.createOrder.bind(this)}/>}
+            onSave={()=>this.props.onSelect()}/>}
         {!this.state.orders &&
           <ActivityIndicator
             style={styles.spinner}
             size="large"/>}
       </View>
     );
-  }
-
-  //API CALLS
-  createOrder(){
-    client.createOrder()
-    .then((responseJson) => {
-      this.props.onSelect(responseJson);
-    })
-  }
-
-  deleteOrder(order){
-    client.deleteOrder(order.id)
-    .then((responseJson) => {
-      var newOrders = this._orders.filter((item) =>{
-        if(item.id !== order.id) return item;
-      })
-      this.updateState(newOrders);
-    })
-  }
-
-  fetchData(){
-    client.listOrders()
-    .then((responseJson) => {
-      var orders = responseJson.orders;
-      var orderList = [];
-      if(orders.length===0){
-        this.updateState(orderList);
-      }
-      else {
-        for(var i=0;i<orders.length;i++){
-          client.getOrder(orders[i].id)
-          .then((responseJson) => {
-            orderList = [...orderList,responseJson];
-            if(orderList.length===orders.length){
-              //TODO FIX THIS TO DO IT IN A CORRECT WAY... ASYNC? PROMISE?
-              this.updateState(orderList);
-            }
-          })
-        }
-      }
-    })
   }
 
 }
@@ -123,6 +68,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10
+  },
+  titleText: {
+    fontSize: 20,
+    fontWeight: 'bold',
   }
 });
 

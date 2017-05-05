@@ -6,9 +6,10 @@ import Options from '../components/Options';
 import hotDrinks from '../default_data/hotDrinks.json';
 import ExtrasListView from '../components/ExtrasListView';
 import OptionsListView from '../components/OptionsListView';
+import { baseUrl } from '../config.js'
 import Client from '../client/Client';
 
-const client = Client();
+const client = Client(baseUrl);
 
 //4 Steps (States) detected in this view
 var STEP_INITIAL = 0;
