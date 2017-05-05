@@ -159,6 +159,8 @@ describe('Coffee service (orders)', () => {
           expect(body.id).to.eql(23)
           body.coffees.forEach((it) => {
             expect(it.id).to.eql(66)
+            expect(it.summary).to.eql('Flat White')
+            expect(it.path).to.eql('order/23/coffee/66')
           })
           expect(body.name).to.eql('Jimothy')
           expect(body.path).to.eql('/order/23')
