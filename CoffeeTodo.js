@@ -42,13 +42,26 @@ class CoffeeTodo extends Component {
     })
   }
 
-  //ORDERS
   updateOrders(orders){
     this.setState({
       orders : orders,
       order: null,
       drink: null,
       viewId : VIEW_ORDERS
+    });
+  }
+
+  updateOrder(order){
+    this.setState({
+      order : order,
+      viewId : VIEW_ORDER
+    });
+  }
+
+  updateDrink(drink){
+    this.setState({
+      drink: drink,
+      viewId : VIEW_DRINK
     });
   }
 
@@ -79,13 +92,6 @@ class CoffeeTodo extends Component {
     })
   }
 
-  updateOrder(order){
-    this.setState({
-      order : order,
-      viewId : VIEW_ORDER
-    });
-  }
-
   onSelectedDrink(drink){
     this.setState({
       drink : drink,
@@ -99,13 +105,19 @@ class CoffeeTodo extends Component {
         return (<LoadingView/>);
         break;
       case VIEW_ORDERS:
-        return (<Orders onSelect={this.onSelectedOrder.bind(this)} onDelete={this.onDeletedOrder.bind(this)} orders={this.state.orders}/>);
+        return (<Orders onSelect={this.onSelectedOrder.bind(this)}
+                        onDelete={this.onDeletedOrder.bind(this)}
+                        orders={this.state.orders}/>);
         break;
       case VIEW_ORDER:
-        return (<Order onSelect={this.onSelectedDrink.bind(this)} order={this.state.order} onComplete={this.onInitialState.bind(this)}/>);
+        return (<Order onSelect={this.onSelectedDrink.bind(this)}
+                       onComplete={this.onInitialState.bind(this)}
+                       order={this.state.order} />);
         break;
       case VIEW_DRINK:
-        return (<Drink order={this.state.order} drink={this.state.drink} onComplete={this.onSelectedOrder.bind(this)}/>);
+        return (<Drink onComplete={this.onSelectedOrder.bind(this)}
+                       order={this.state.order}
+                       drink={this.state.drink} />);
         break;
       default: return null;
         break;
