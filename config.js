@@ -1,1 +1,3 @@
-export const baseUrl = 'http://3a68ce5c.ngrok.io';
+export const baseUrl = process.env.coffeeApiBaseUrl || 'http://localhost:8080';
+
+export default { baseUrl }

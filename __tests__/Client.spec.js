@@ -147,8 +147,8 @@ describe('Coffee service (orders)', () => {
             body: {
               id: 23,
               coffees: eachLike({id:like(66), summary: like('Flat White'), path: like('order/23/coffee/66')},{min:2}),
-              name: 'Jimothy',
-              path: '/order/23'
+              name: like('Jimothy'),
+              path: like('/order/23')
             }
           }
         })

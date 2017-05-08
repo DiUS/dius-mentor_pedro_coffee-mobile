@@ -6,10 +6,6 @@ import Options from '../components/Options';
 import hotDrinks from '../default_data/hotDrinks.json';
 import ExtrasListView from '../components/ExtrasListView';
 import OptionsListView from '../components/OptionsListView';
-import { baseUrl } from '../config.js'
-import Client from '../client/Client';
-
-const client = Client(baseUrl);
 
 //4 Steps (States) detected in this view
 var STEP_INITIAL = 0;
@@ -24,7 +20,6 @@ class Drink extends Component {
     super(props);
     this._initialDrink = this.props.drink;
     this.state = {
-      order: this.props.order,
       //TODO: Modify when API accepts other drinks for drink:this.props.drink
       drink: {
         id:this.props.drink?this.props.drink.id:null,
@@ -32,9 +27,8 @@ class Drink extends Component {
         style:this.props.drink?this.props.drink.style:null,
         size:this.props.drink?this.props.drink.size:null
       },
-      isLoading:false,
       step: this.props.drink?STEP_EXTRAS:STEP_INITIAL,
-      drinkOptions:null,
+      drinkOptions:this.props.options,
       //TODO FETCH DATA FROM API IN componentDidMount
       optionsList: ds.cloneWithRows(hotDrinks)
     };
@@ -45,7 +39,7 @@ class Drink extends Component {
   }
 
   onBack(){
-    this.props.onComplete(this.state.order);
+    this.props.onCreate();
   }
 
   onSelectType(type){//Called on Initial Step. Initial Step is mandatory
@@ -70,47 +64,37 @@ class Drink extends Component {
   }
 
   onStep(drink){
-    if(!this.state.drinkOptions){
-      this.setState({
-        drink:drink,
-        isLoading:this.state.drinkOptions?false:true
-      });
-      //TODO: By now only coffee options
-      this.fetchDrinkOptions('coffee');
+    var currentOptions = null;
+    var step=STEP_INITIAL;
+    if(!drink.type) {
+      step=STEP_INITIAL;
     }
-    else{
-      var currentOptions = null;
-      var step=STEP_INITIAL;
-      if(!drink.type) {
-        step=STEP_INITIAL;
-      }
-      else if (!drink.style && this.state.drinkOptions.style) {
-        step=STEP_STYLE;
-      }
-      else if (!drink.size && this.state.drinkOptions.size) {
-        step=STEP_SIZE;
-      }
-      else {
-        step=STEP_EXTRAS;
-      }
-      switch (step) {
-        case STEP_INITIAL: //initial
-          currentOptions=ds.cloneWithRows(hotDrinks);
-          break;
-        case STEP_STYLE: //choose style
-          currentOptions=ds.cloneWithRows(this.state.drinkOptions.style);
-          break;
-        case STEP_SIZE: //choose size
-          currentOptions=ds.cloneWithRows(this.state.drinkOptions.size);
-          break;
-        default:break;
-      }
-      this.setState({
-        drink: drink,
-        optionsList : currentOptions,
-        step: step
-      });
+    else if (!drink.style && this.state.drinkOptions.style) {
+      step=STEP_STYLE;
     }
+    else if (!drink.size && this.state.drinkOptions.size) {
+      step=STEP_SIZE;
+    }
+    else {
+      step=STEP_EXTRAS;
+    }
+    switch (step) {
+      case STEP_INITIAL: //initial
+        currentOptions=ds.cloneWithRows(hotDrinks);
+        break;
+      case STEP_STYLE: //choose style
+        currentOptions=ds.cloneWithRows(this.state.drinkOptions.style);
+        break;
+      case STEP_SIZE: //choose size
+        currentOptions=ds.cloneWithRows(this.state.drinkOptions.size);
+        break;
+      default:break;
+    }
+    this.setState({
+      drink: drink,
+      optionsList : currentOptions,
+      step: step
+    });
   }
 
   renderRowSelect(rowData){
@@ -175,20 +159,19 @@ class Drink extends Component {
         <Text>Current Selection:</Text>
         {this.renderSelectedValues()}
         <Text>Choose your {this.state.step>STEP_SIZE?"extras":"drink options"}:</Text>
-        {!this.state.isLoading && this.renderOptions()}
-        {this.state.isLoading && <ActivityIndicator style={styles.spinner} size="large"/>}
+        {this.renderOptions()}
         <View style={{flexDirection:'row', justifyContent:'space-between'}}>
           <View style={{flex : 1, marginRight:4}}>
             <Button title='<' onPress={()=>this.onBack()} />
           </View>
           <View style={{flex : 8, marginLeft:4}}>
             {this._initialDrink &&
-              <Options onSaveTitle='Update Drink' onSave={this.updateDrink.bind(this)}
+              <Options onSaveTitle='Update Drink' onSave={()=>this.props.onUpdate(this.state.drink)}
                 onSaveDisabled={!(this.state.step>STEP_SIZE) ||
                   (this.state.drink.style===this._initialDrink.style &&
                     this.state.drink.size===this._initialDrink.size)}/>}
             {!this._initialDrink &&
-              <Options onSaveTitle='Add Drink' onSave={this.createDrink.bind(this)}
+              <Options onSaveTitle='Add Drink' onSave={()=>this.props.onCreate(this.state.drink)}
                 onSaveDisabled={!(this.state.step>STEP_SIZE)}/>}
           </View>
         </View>
@@ -196,45 +179,6 @@ class Drink extends Component {
     );
   }
 
-
-
-  /*
-  * API CALLS
-  * TODO: PATH SHOULD CHANGE DEPENDING ON DRINK (IF THERE ARE DIFF DRINKS)
-  */
-  createDrink(){
-    client.createDrink(this.state.order.id,this.state.drink)
-    .then((responseJson) => {
-      var newDrinks = this.state.order.coffees;
-      if(!newDrinks){
-        newDrinks = [responseJson];
-      }
-      else{
-        newDrinks = [...newDrinks,responseJson];
-      }
-      var newOrder = this.state.order;
-      newOrder.coffees = newDrinks;
-      this.props.onComplete(this.state.order);
-    })
-  }
-
-  updateDrink(){
-    client.updateDrink(this.state.order.id,this.state.drink)
-    .then((responseJson) => {
-      this.props.onComplete(this.state.order);
-    })
-  }
-
-  fetchDrinkOptions(drink){
-    client.getDrinkMenu(drink)
-    .then((responseJson) => {
-      this.setState({
-        drinkOptions:responseJson,
-        isLoading:false
-      });
-      this.onStep(this.state.drink);
-    })
-  }
 }
 
 const styles = StyleSheet.create({

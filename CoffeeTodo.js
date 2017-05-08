@@ -5,10 +5,9 @@ import Drink from './views/Drink';
 import Orders from './views/Orders';
 import Order from './views/Order';
 import LoadingView from './components/LoadingView';
-import { baseUrl } from './config.js'
 import Client from './client/Client';
 
-const client = Client(baseUrl);
+const client = Client();
 
 //3 views detected in this application
 const LOADING = 0;
@@ -26,6 +25,7 @@ class CoffeeTodo extends Component {
       orders: null,
       order: null,
       drink: null,
+      drinkOptions: null,
       viewId: LOADING
     };
   }
@@ -59,10 +59,14 @@ class CoffeeTodo extends Component {
   }
 
   updateDrink(drink){
-    this.setState({
-      drink: drink,
-      viewId : VIEW_DRINK
-    });
+    client.getDrinkMenu('coffee')
+    .then((options) => {
+      this.setState({
+        drink: drink,
+        drinkOptions: options,
+        viewId : VIEW_DRINK
+      });
+    })
   }
 
   onSelectedOrder(orderId){
@@ -74,7 +78,7 @@ class CoffeeTodo extends Component {
       .then((order) => this.updateOrder(order))
     }
     else{
-      client.createOrder(orderId)
+      client.createOrder()
       .then((order) => this.updateOrder(order))
     }
   }
@@ -92,11 +96,74 @@ class CoffeeTodo extends Component {
     })
   }
 
+  onUpdatedOrder(orderId,name){
+    this.setState({
+      viewId : LOADING
+    });
+    if(orderId && name){
+      client.updateOrder(orderId,name)
+      .then((responseJson) => {
+        this.onInitialState();
+      })
+    }
+    else{
+      this.onInitialState();
+    }
+  }
+
   onSelectedDrink(drink){
     this.setState({
-      drink : drink,
-      viewId : VIEW_DRINK
+      viewId : LOADING
     });
+    if(drink){
+      client.getDrink(this.state.order.id,drink)
+      .then((drink) => this.updateDrink(drink))
+    }
+    else{
+      this.updateDrink()
+    }
+  }
+
+  onCreatedDrink(drink){
+    this.setState({
+      viewId : LOADING
+    });
+    if (drink){
+      client.createDrink(this.state.order.id,drink)
+      .then((drink) => client.getOrder(this.state.order.id))
+      .then((order) => this.updateOrder(order))
+    }
+    else{
+      this.updateOrder(this.state.order);
+    }
+  }
+
+  onUpdatedDrink(drink){
+    this.setState({
+      viewId : LOADING
+    });
+    client.updateDrink(this.state.order.id,drink)
+    .then((drink) => client.getOrder(this.state.order.id))
+    .then((order) => this.updateOrder(order))
+  }
+
+  onDeletedDrink(drink){
+    this.setState({
+      viewId : LOADING
+    });
+    client.deleteDrink(this.state.order.id,drink)
+    .then((responseJson) => {
+      var newCoffees = this.state.order.coffees.filter((coffee) =>{
+        if(coffee.id !== drink.id) return coffee;
+      })
+      var newOrder = this.state.order;
+      newOrder.coffees = newCoffees;
+      this.updateOrder(newOrder);
+    })
+  }
+
+  getMenu(drink){
+    client.getDrinkMenu(drink)
   }
 
   render() {
@@ -110,13 +177,16 @@ class CoffeeTodo extends Component {
                         orders={this.state.orders}/>);
         break;
       case VIEW_ORDER:
-        return (<Order onSelect={this.onSelectedDrink.bind(this)}
-                       onComplete={this.onInitialState.bind(this)}
+        return (<Order onSelectDrink={this.onSelectedDrink.bind(this)}
+                       onDeleteDrink={this.onDeletedDrink.bind(this)}
+                       onDeleteOrder={this.onDeletedOrder.bind(this)}
+                       onUpdateOrder={this.onUpdatedOrder.bind(this)}
                        order={this.state.order} />);
         break;
       case VIEW_DRINK:
-        return (<Drink onComplete={this.onSelectedOrder.bind(this)}
-                       order={this.state.order}
+        return (<Drink onCreate={this.onCreatedDrink.bind(this)}
+                       onUpdate={this.onUpdatedDrink.bind(this)}
+                       options={this.state.drinkOptions}
                        drink={this.state.drink} />);
         break;
       default: return null;
