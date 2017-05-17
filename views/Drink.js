@@ -1,7 +1,7 @@
 'use strict';
 
 import React, { Component } from 'react';
-import { View, ListView, Button, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, ListView, Button, Text } from 'react-native';
 import Options from '../components/Options';
 import hotDrinks from '../default_data/hotDrinks.json';
 import ExtrasListView from '../components/ExtrasListView';

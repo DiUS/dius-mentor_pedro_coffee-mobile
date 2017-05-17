@@ -1,7 +1,7 @@
 'use strict';
 
 import React, { Component } from 'react';
-import { View, ListView, Button, Text, TextInput, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, ListView, Button, Text, TextInput } from 'react-native';
 import DynamicListView from '../components/DynamicListView';
 import Options from '../components/Options';
 import Style from '../style/style';
