@@ -6,6 +6,7 @@ import Options from '../components/Options';
 import hotDrinks from '../default_data/hotDrinks.json';
 import ExtrasListView from '../components/ExtrasListView';
 import OptionsListView from '../components/OptionsListView';
+import Style from '../style/style';
 
 //4 Steps (States) detected in this view
 var STEP_INITIAL = 0;
@@ -114,24 +115,24 @@ class Drink extends Component {
 
   renderSelectedValues(){
     return(
-      <View style={styles.containerSelected}>
-        <View style={styles.container}>
+      <View style={Style.containerSelectedDrink}>
+        <View style={Style.containerDrink}>
           {this.state.drink.type &&
-            <View style={styles.margin}>
+            <View style={Style.margin}>
               <Button
                 title={this.state.drink.type}
                 onPress={()=>this.onSelectType()}
                 color='#c8dcf4'/>
             </View>}
           {this.state.drink.style &&
-            <View style={styles.margin}>
+            <View style={Style.margin}>
              <Button
                title={this.state.drink.style}
                onPress={()=>this.onSelectStyle()}
                color='#c8dcf4'/>
             </View>}
           {this.state.drink.size &&
-            <View style={styles.margin}>
+            <View style={Style.margin}>
               <Button
                 title={this.state.drink.size}
                 onPress={()=>this.onSelectSize()}
@@ -180,28 +181,5 @@ class Drink extends Component {
   }
 
 }
-
-const styles = StyleSheet.create({
-  spinner: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 80,
-    flex: 1,
-    padding: 8,
-  },
-  containerSelected:{
-    flex: 0.45,
-    alignItems: 'flex-start',
-    alignSelf:'stretch',
-  },
-  container:{
-    flex:1,
-    alignItems:'stretch',
-    alignSelf:'stretch',
-  },
-  margin:{
-    marginTop: 8,
-  }
-});
 
 export default Drink;

@@ -2,32 +2,17 @@
 
 import React, { Component } from 'react';
 import { View, ActivityIndicator, StyleSheet  } from 'react-native';
+import Style from '../style/style';
 
-class LoadingView extends Component {
+export default class LoadingView extends Component {
 
     render(){
       return(
-        <View style={styles.container}>
+        <View style={Style.container}>
           <ActivityIndicator
-            style={styles.spinner}
+            style={Style.spinner}
             size="large"/>
         </View>
       );
     }
 }
-
-const styles = StyleSheet.create({
-  spinner: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-    height: 80,
-    padding: 8,
-  },
-  container: {
-    flex: 1,
-    padding: 10
-  }
-});
-
-export default LoadingView;

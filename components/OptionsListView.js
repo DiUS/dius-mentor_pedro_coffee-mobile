@@ -2,8 +2,9 @@
 
 import React, { Component } from 'react';
 import { View, ListView, StyleSheet } from 'react-native';
+import Style from '../style/style';
 
-class OptionsListView extends Component {
+export default class OptionsListView extends Component {
   render(){
     return (
       <ListView
@@ -11,19 +12,9 @@ class OptionsListView extends Component {
         dataSource={this.props.dataSource}
         renderRow = {this.props.renderRow}
         renderSeparator={(sectionId, rowId) =>
-          <View key={rowId} style={styles.separator}/>
+          <View key={rowId} style={Style.separator}/>
         }
       />
     );
   }
 }
-
-const styles = StyleSheet.create({
-  separator: {
-    flex: 1,
-    height: 6,
-    backgroundColor: '#FFFFFF',
-  }
-});
-
-export default OptionsListView;
