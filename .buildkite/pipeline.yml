@@ -2,4 +2,4 @@ steps:
   - label: "Build, unit, Pact"
     command: ./docker_test.sh
     agents:
-      queue: elastic
+      queue: internal
