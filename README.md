@@ -23,7 +23,9 @@ set your environment variable for `coffeeApiBaseUrl` that will be used in [confi
 
   --choose your platform--
 Android > react-native run-android
-iOS     > react-native run-ios
+iOS     > 
+  chmod 755 android/gradlew [if you are not able to run it]
+  react-native run-ios
 Web     > npm run-script web
 ```
 
